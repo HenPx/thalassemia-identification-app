@@ -1,0 +1,7 @@
+numpy==2.4.1
+opencv_contrib_python==4.11.0.86
+opencv_python==4.10.0.84
+opencv_python==4.13.0.90
+pandas==3.0.0
+streamlit==1.38.0
+streamlit==1.53.0
