@@ -1,4 +1,3 @@
 numpy
 opencv_python
 pandas
-streamlit
