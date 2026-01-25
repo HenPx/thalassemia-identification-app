@@ -84,21 +84,28 @@ with tab1:
     uploaded_file = st.file_uploader("Pilih gambar...", type=['png', 'jpg', 'jpeg'], key="single")
 
     if uploaded_file is not None and loaded_model:
-        file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-        image_real = cv2.imdecode(file_bytes, 1)
+        st.success("Status input Gambar:\nSukses")
 
-        img_pre, label, conf = process_and_predict(image_real, loaded_model, CLASS_NAME)
-        
-        st.metric(label="Kelas", value=label)
-        st.metric(label="Confidence", value=f"{conf:.2f}%")
-        
-        
-        c1, c2 = st.columns([2,2])
-        with c1:
-            st.image(image_real, caption="Asli", channels="BGR", width='stretch')
-        if img_pre is not None:
-            with c2:
-                st.image(img_pre, caption="Preprocessing", width=150, clamp=True)
+        if st.button("Prediksi"):
+
+            file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+            image_real = cv2.imdecode(file_bytes, 1)
+
+            img_pre, label, conf = process_and_predict(
+                image_real, loaded_model, CLASS_NAME
+            )
+
+            st.metric(label="Kelas", value=label)
+            st.metric(label="Confidence", value=f"{conf:.2f}%")
+
+            c1, c2 = st.columns([2, 2])
+
+            with c1:
+                st.image(image_real, caption="Asli", channels="BGR", width='stretch')
+
+            if img_pre is not None:
+                with c2:
+                    st.image(img_pre, caption="Preprocessing", width=150, clamp=True)
 
 # === TAB 2: ZIP FILE
 with tab2:
@@ -106,7 +113,7 @@ with tab2:
     zip_file = st.file_uploader("Pilih file ZIP...", type="zip", key="zip")
 
     if zip_file is not None and loaded_model:
-        if st.button("Mulai Proses Batch"):
+        if st.button("Prediksi"):
             st.session_state['batch_results'] = []
             st.session_state['page_number'] = 0 
             
