@@ -1,11 +1,7 @@
 import streamlit as st
-import pickle
+import pickle, cv2, zipfile, math
 import numpy as np
-import cv2
-import zipfile
 import pandas as pd 
-import math
-
 from utils.cnnHelper import ModerateCNN_GABOR_COMBINED, Conv2D, ReLU, MaxPool2x2, Flatten, Dense
 from utils.preprocessing import process_and_predict
 
@@ -32,8 +28,6 @@ def load_model_cached(model_path):
         return None
 
 loaded_model = load_model_cached(MODEL_PATH)
-
-
 
 st.title("🔬 Identifikasi Eritrosit Thalassemia dengan Deep Learning")
 
@@ -71,10 +65,7 @@ with st.expander("ℹ️ Catatan Penggunaan", expanded=True):
     **PENTING:** Hasil prediksi dari aplikasi ini bersifat **indikatif** untuk keperluan penelitian. 
     Aplikasi ini **tidak menggantikan diagnosis medis profesional**. Konsultasikan hasil dengan ahli patologi klinik untuk validasi lebih lanjut.
     """)
-
-
 st.info("Terdapat dua mode prediksi yang dapat dipilih:\n1. Satu gambar tunggal\n2. Batch gambar dalam file ZIP.")
-
 
 tab1, tab2 = st.tabs(["🖼️ Single Image", "📦 Batch (Zip File)"])
 
@@ -106,7 +97,6 @@ with tab1:
             if img_pre is not None:
                 with c2:
                     st.image(img_pre, caption="Preprocessing", width=150, clamp=True)
-
 # === TAB 2: ZIP FILE
 with tab2:
     st.header("Upload File ZIP")
@@ -146,18 +136,13 @@ with tab2:
                     st.session_state['batch_results'] = temp_results
                     st.success(f"Selesai memproses {len(temp_results)} gambar!")
     results = st.session_state['batch_results']
-    
     if len(results) > 0:
         st.divider()
-        
         st.subheader("📊 Hasil Prediksi")
         df_res = pd.DataFrame(results)
-        
         counts = df_res['label'].value_counts().reset_index()
         counts.columns = ['Kelas', 'Jumlah']
-        
         col_sum1, col_sum2 = st.columns([1, 1])
-        
         with col_sum1:
             st.dataframe(counts, hide_index=True, width='stretch')
         
@@ -165,8 +150,6 @@ with tab2:
             st.bar_chart(counts, x='Kelas', y='Jumlah')
 
         st.divider()
-
-
         st.subheader("📄 Detail Prediksi Gambar")
         
         # Konfigurasi Pagination
@@ -204,7 +187,7 @@ with tab2:
         col_prev, col_info, col_next = st.columns([1, 2, 1])
         
         with col_prev:
-            if st.button("⬅️ Sebelumnya", disabled=(current_page == 0)):
+            if st.button("Sebelumnya", disabled=(current_page == 0)):
                 st.session_state['page_number'] -= 1
                 st.rerun() 
         
@@ -212,6 +195,6 @@ with tab2:
             st.markdown(f"<div style='text-align: center'>Halaman <b>{current_page + 1}</b> dari {total_pages}</div>", unsafe_allow_html=True)
         
         with col_next:
-            if st.button("Berikutnya ➡️", disabled=(current_page == total_pages - 1)):
+            if st.button("Berikutnya", disabled=(current_page == total_pages - 1)):
                 st.session_state['page_number'] += 1
                 st.rerun() 
