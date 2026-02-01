@@ -77,7 +77,7 @@ with tab1:
     if uploaded_file is not None and loaded_model:
         st.success("Status input Gambar:\nSukses")
 
-        if st.button("Prediksi"):
+        if st.button("Prediksi", key="predict_single"):
 
             file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
             image_real = cv2.imdecode(file_bytes, 1)
@@ -103,7 +103,7 @@ with tab2:
     zip_file = st.file_uploader("Pilih file ZIP...", type="zip", key="zip")
 
     if zip_file is not None and loaded_model:
-        if st.button("Prediksi"):
+        if st.button("Prediksi", key="predict_zip"):
             st.session_state['batch_results'] = []
             st.session_state['page_number'] = 0 
             
